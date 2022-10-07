@@ -1,0 +1,109 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <!-- Unique identifier of the plugin. It should be FQN. It cannot be changed between the plugin versions. -->
+    <id>com.yndongyong.androiddevhelper</id>
+
+    <!-- Public plugin name should be written in Title Case.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-name -->
+    <name>AndroidDevHelper</name>
+
+    <!-- A displayed Vendor name or Organization ID displayed on the Plugins Page. -->
+    <vendor email="yndongyong@gmail.com" url="https://www.yourcompany.com">yndongyong</vendor>
+
+    <!-- Description of the plugin displayed on the Plugin Page and IDE Plugin Manager.
+         Simple HTML elements (text formatting, paragraphs, and lists) can be added inside of <![CDATA[ ]]> tag.
+         Guidelines: https://plugins.jetbrains.com/docs/marketplace/plugin-overview-page.html#plugin-description -->
+    <description><![CDATA[
+    Android 开发相关插件集合，支持以下功能：<br>
+    <b>1.</b>复制资源名称，支持Android所有资源类型，使用快捷键，或者右键<br>
+    <ol>
+      <li>代码直接使用（ctrl+alt+y），例子：res/layout/xx.layout -> R.layout.xx</li>
+      <li>xml文件使用（shift+ctrl+alt+y），例子：res/layout/xx.layout -> @layout/xx</li>
+    </ol>
+    <b>2.</b>获取到当前APP显示的Activity和其中的Fragment并进行跳转，点击菜单栏 -> DongAndroidDevHelper 或者通过快捷键 "Alt + 0"<br>
+    <b>3.</b>打开当前App设置界面，点击菜单栏 -> DongAndroidDevHelper 或者通过快捷键 "Alt + 0"<br>
+    <b>4.</b>scheme跳转测试 -> DongAndroidDevHelper 或者通过快捷键 "Alt + 0"<br>
+    <b>5.</b>iconfont的预览，直接点击.ttf文件查看,点击复制文件名，如：yynui_xxx<br>
+    <em>by yndongyong</em>
+  ]]></description>
+
+    <change-notes><![CDATA[
+          <b>1.0.0</b> 2022年10月7号.<br>
+          1.支持Android资源名称复制，方便在代码中或者xml直接粘贴<<br/>
+          2.查找当前app的activity和fragment，连接adb使用
+          3.打开当前app的设置页面
+          4.scheme跳转测试
+          5.iconfont文件预览
+          <em>happy to used</em>
+        ]]>
+    </change-notes>
+    <!-- Product and plugin compatibility requirements.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-compatibility.html -->
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.java</depends>
+    <depends>com.intellij.modules.androidstudio</depends>
+    <!--<depends>org.jetbrains.android</depends>-->
+
+    <!-- Extension points defined by the plugin.
+         Read more: https://plugins.jetbrains.com/docs/intellij/plugin-extension-points.html -->
+    <extensions defaultExtensionNs="com.intellij">
+        <notificationGroup displayType="BALLOON" id="DongAndroidDevHelper Notification Group"/>
+        <!---->
+        <fileType name="IconFont" implementationClass="com.yndongyong.androiddevhelper.iconfont.IconFontFileType" fieldName="INSTANCE"
+                  extensions="ttf" order="first"/>
+        <fileEditorProvider implementation="com.yndongyong.androiddevhelper.iconfont.IconFontViewerProvider" />
+    </extensions>
+
+    <actions>
+        <group id="dong_adb_menu" text="DongDevHelper" description="ADB helper">
+            <add-to-group group-id="MainMenu" anchor="last"/>
+            <action
+                    id="com.yndongyong.androiddevhelper.actions.QuickListAction"
+                    class="com.yndongyong.androiddevhelper.actions.QuickListAction">
+                <keyboard-shortcut keymap="$default" first-keystroke="alt 0"/>
+            </action>
+
+            <action
+                    id="com.yndongyong.androiddevhelper.actions.FindActivity"
+                    class="com.yndongyong.androiddevhelper.actions.FindActivity"
+                    text="FindActivity and Fragment">
+            </action>
+
+            <action
+                    id="com.yndongyong.androiddevhelper.actions.StartAppSettingAction"
+                    class="com.yndongyong.androiddevhelper.actions.StartAppSettingAction"
+                    text="Start App Setting" description="UrlScheme test helper">
+            </action>
+
+            <action
+                    id="com.yndongyong.androiddevhelper.actions.UrlSchemeTestAction"
+                    class="com.yndongyong.androiddevhelper.actions.UrlSchemeTestAction"
+                    text="Url Scheme Test" description="UrlScheme test helper">
+            </action>
+        </group>
+        <!--复制资源-->
+        <group id="CopyAndroidReference" text="Copy Android Reference" popup="true">
+
+            <add-to-group group-id="EditMenu" anchor="after" relative-to-action="CopyReference"/>
+            <add-to-group group-id="EditorPopupMenu" anchor="after" relative-to-action="CopyReference"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="after" relative-to-action="CutCopyPasteGroup"/>
+            <add-to-group group-id="EditorTabPopupMenu" anchor="after" relative-to-action="CopyPaths"/>
+            <add-to-group group-id="dong_adb_menu" anchor="last"/>
+
+            <action id="CopyReferenceForJavaAction"
+                    class="com.yndongyong.androiddevhelper.copynameactions.CopyReferenceForJavaAction"
+                    text="CopyRef4Java"
+                    description="Copy Android resource reference for java">
+                <keyboard-shortcut keymap="$default" first-keystroke="ctrl alt y"/>
+            </action>
+
+            <action id="CopyReferenceForXmlAction"
+                    class="com.yndongyong.androiddevhelper.copynameactions.CopyReferenceForXmlAction"
+                    text="CopyRef4Xml"
+                    description="Copy Android resource reference for Xml">
+                <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt y"/>
+            </action>
+
+        </group>
+    </actions>
+</idea-plugin>
